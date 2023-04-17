@@ -1,42 +1,62 @@
 // Copyright 2022 NNTU-CS
 #ifndef INCLUDE_TPQUEUE_H_
 #define INCLUDE_TPQUEUE_H_
-
+#include <cassert>
 template<typename T, int size>
-template<typename T, int size = 0>
 class TPQueue {
-  // реализация шаблона очереди с приоритетом на кольцевом буфере
  private:
-    T mas[size] = {0};
-    int left, right, count;
-
+  T* box;
+  int capacity;
+  int left, right;
+  int cSize;
  public:
-    TPQueue(): left(0), right(0), count(0) {}
-    void push(const T& sm) {
-        if (count == 0) {
-            mas[0] = sm;
-            ++right;
-            ++count;
-        } else {
-            for (int i = right; i > left; --i) {
-                if (mas[(i - 1) % size].prior >= sm.prior) {
-                    mas[i % size] = sm;
-                    break;
-                } else {
-                    mas[i % size] = mas[(i - 1) % size];
-                    mas[(i - 1)%size] = sm;
-                }
-            }
-            ++right;
-        }
+  TPQueue() :capacity(size), left(0), right(0), cSize(0) {
+    box = new T[capacity + 1];
+  }
+  void push(const T& value) {
+    assert(cSize < capacity);
+    if (cSize == 0) {
+      box[right++] = value;
+      cSize++;
+    } else {
+      int i = right - 1;
+      bool f = 0;
+      while (i >= left && value.prior > container[i].prior) {
+      while (i >= left && value.prior > box[i].prior) {
+        f = 1;
+        box[i + 1] = box[i];
+        box[i] = value;
+        i--;
+      }
+      if (f == 0) {
+        box[right] = value;
+      }
+      right++;
+      cSize++;
     }
-    const T& pop() {
-        return mas[(left++ % size)];
+    if (right > capacity) {
+      right -= capacity + 1;
     }
+  }
+  const T& pop() {
+    assert(cSize > 0);
+    cSize--;
+    if (left > capacity) {
+      left -= capacity + 1;
+    }
+    return box[left++];
+  }
+  char get() {
+    assert(cSize > 0);
+    return box[left].ch;
+  }
+  bool isFull() const {
+    return cSize == capacity;
+  }
+  bool isEmpty() const {
+    return cSize == 0;
+  }
+  ~TPQueue() {
+    delete[] box;
+  }
 };
-
-struct SYM {
-  char ch;
-  int prior;
-};
-#endif  // INCLUDE_TPQUEUE_H_
