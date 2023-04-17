@@ -18,15 +18,14 @@ class TPQueue {
       cSize++;
     } else {
       int i = right - 1;
-      bool f = 0;
-      while (i >= left && value.prior > container[i].prior) {
+      bool chek = 0;
       while (i >= left && value.prior > box[i].prior) {
-        f = 1;
+        chek = 1;
         box[i + 1] = box[i];
         box[i] = value;
         i--;
       }
-      if (f == 0) {
+      if (chek == 0) {
         box[right] = value;
       }
       right++;
