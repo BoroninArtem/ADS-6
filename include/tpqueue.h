@@ -7,7 +7,7 @@ class TPQueue {
  private:
   T* box;
   int capacity, int left, right, int cSize;
-  
+ 
  public:
   TPQueue() :capacity(size), left(0), right(0), cSize(0) {
     box = new T[capacity + 1];
