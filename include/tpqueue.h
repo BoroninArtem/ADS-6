@@ -7,59 +7,59 @@
 template<typename T, int size>
 class TPQueue {
  private:
-  T* box;
-  int currSize;
-  int capacity;
-  int first, last;
+  T* arr;
+  int nowSize;
+  int cap;
+  int head, tail;
 
  public:
-  TPQueue() :capacity(size), first(0), last(0), currSize(0) {
-    box = new T[capacity + 1];
+  TPQueue() :cap(size), head(0), tail(0), nowSize(0) {
+    arr = new T[cap + 1];
   }
   void push(const T& value) {
-    assert(currSize < capacity);
-    if (currSize == 0) {
-      box[last++] = value;
-      currSize++;
+    assert(nowSize < cap);
+    if (nowSize == 0) {
+      arr[tail++] = value;
+      nowSize++;
     } else {
-      int i = last - 1;
+      int i = tail - 1;
       bool f = 0;
-      while (i >= first && value.prior > container[i].prior) {
+      while (i >= head && value.prior > arr[i].prior) {
         f = 1;
-        box[i + 1] = box[i];
-        box[i] = value;
+        arr[i + 1] = arr[i];
+        arr[i] = value;
         i--;
       }
       if (f == 0) {
-        box[last] = value;
+        arr[tail] = value;
       }
-      last++;
-      currSize++;
+      tail++;
+      nowSize++;
     }
-    if (last > capacity) {
-      last -= capacity + 1;
+    if (tail > cap) {
+      tail -= cap + 1;
     }
   }
   const T& pop() {
-    assert(currSize > 0);
-    currSize--;
-    if (first > capacity) {
-      first -= capacity + 1;
+    assert(nowSize > 0);
+    nowSize--;
+    if (head > cap) {
+      head -= cap + 1;
     }
-    return box[first++];
+    return arr[head++];
   }
   char get() {
-    assert(currSize > 0);
-    return box[first].ch;
+    assert(nowSize > 0);
+    return arr[head].ch;
   }
   bool isFull() const {
-    return currSize == capacity;
+    return nowSize == cap;
   }
   bool isEmpty() const {
-    return currSize == 0;
+    return nowSize == 0;
   }
   ~TPQueue() {
-    delete[] box;
+    delete[] arr;
   }
 };
 
